@@ -1,118 +1,82 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
+// App.tsx
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons'; // Make sure this is installed
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {AuthProvider, useAuth} from './context/AuthContext';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+import HomeScreen from './screens/HomeScreen';
+import LoginScreen from './screens/LoginScreen';
+import SalesScreen from './screens/SalesScreen';
+import StockScreen from './screens/StockScreen';
+import StockUpdateScreen from './screens/StockUpdateScreen';
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+// Define type for bottom tab navigation
+export type BottomTabParamList = {
+  Home: undefined;
+  Sales: undefined;
+  Stock: undefined;
+  StockUpdate: undefined;
+};
+
+const Tab = createBottomTabNavigator<BottomTabParamList>();
+const Stack = createNativeStackNavigator();
+
+function AuthStack() {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen name="Login" component={LoginScreen} />
+    </Stack.Navigator>
   );
 }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+function AppStack() {
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={({route}) => ({
+        tabBarIcon: ({color, size}) => {
+          let iconName: string;
+
+          if (route.name === 'Home') {
+            iconName = 'home-outline';
+          } else if (route.name === 'Sales') {
+            iconName = 'settings-outline';
+          } else if (route.name === 'Stock') {
+            iconName = 'stock-outline';
+          } else if (route.name === 'StockUpdate') {
+            iconName = 'StockUpdate-outline';
+          }
+
+          return <Icon name={iconName as string} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+      })}>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Sales" component={SalesScreen} />
+      <Tab.Screen name="Stock" component={StockScreen} />
+      <Tab.Screen name="StockUpdate" component={StockUpdateScreen} />
+    </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+function RootNavigator() {
+  const {isAuthenticated} = useAuth();
+
+  return isAuthenticated ? <AppStack /> : <AuthStack />;
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <NavigationContainer>
+        <RootNavigator />
+      </NavigationContainer>
+    </AuthProvider>
+  );
+}
 
 export default App;
