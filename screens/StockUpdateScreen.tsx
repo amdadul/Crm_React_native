@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import StockUpdateCreate from '../components/StockUpdateCreate';
 import StockUpdateHistory from '../components/StockUpdateHistory';
 import StockUpdateScreenTabs from '../navigations/StockUpdateScreenTabs';
 
@@ -8,7 +9,7 @@ const StockUpdateScreen = () => {
 
   const renderContent = () => {
     if (activeTab === 'Create') {
-      return <Text style={styles.contentText}>Create Content</Text>;
+      return <StockUpdateCreate />;
     } else if (activeTab === 'History') {
       return <StockUpdateHistory />;
     }

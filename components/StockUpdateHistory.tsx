@@ -75,26 +75,23 @@ const StockUpdateHistory = () => {
     setSelectedItem(null); // Clear selected item
   };
 
-  // Layout handler to ensure cards stretch correctly
   const renderCard = ({item}) => (
     <View style={styles.card}>
       <View style={styles.cardContentHolder}>
-        <View style={styles.cardItems}>
+        {/* Left-aligned content */}
+        <View style={styles.leftContent}>
           <Text style={styles.cardDescription}>{item.date}</Text>
-          <Text style={styles.cardDescription}>Qty : {item.quantity}</Text>
+          <Text style={styles.cardDescription}>Qty: {item.quantity}</Text>
         </View>
-        <View style={[styles.cardItems, styles.cardItemsContent]}>
-          <Text style={styles.cardDescription}>{item.order_no}</Text>
+
+        {/* Right-aligned content */}
+        <View style={styles.rightContent}>
+          <Text style={styles.cardOrderNo}>{item.order_no}</Text>
           <TouchableOpacity
-            style={styles.cardContentHolder}
+            style={styles.viewButton}
             onPress={() => handleViewDetails(item)}>
-            <Icon
-              name="eye"
-              title="View Details"
-              size={24}
-              color="green"
-              style={styles.icon}
-            />
+            <Icon name="eye" size={20} color="#fff" />
+            <Text style={styles.viewButtonText}>View</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -129,9 +126,8 @@ export default StockUpdateHistory;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#f8f9fa',
-    padding: 10,
+    width: '100%',
   },
   flatListContent: {
     paddingBottom: 10,
@@ -149,30 +145,46 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'stretch',
   },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: '#333333',
+  cardContentHolder: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+  },
+  leftContent: {
+    justifyContent: 'flex-start',
   },
   cardDescription: {
     fontSize: 15,
     color: '#333333',
+    marginBottom: 5,
   },
-  cardContentHolder: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  cardItems: {
-    width: '50%',
-  },
-  cardItemsContent: {
+  rightContent: {
     justifyContent: 'flex-end',
-    alignItems: 'center',
   },
-  icon: {
-    width: 24,
-    height: 24,
-    marginRight: 16,
+  cardOrderNo: {
+    fontSize: 14,
+    color: '#666666',
+    marginBottom: 10,
+  },
+  viewButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#28a745',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  viewButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    marginLeft: 5,
+    fontWeight: 'bold',
   },
 });

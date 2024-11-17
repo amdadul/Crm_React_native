@@ -1,15 +1,40 @@
 // SalesScreen.tsx
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import Loader from '../components/Loader';
+import SalesCreate from '../components/SalesCreate';
 import SalesHistory from '../components/SalesHistory';
+import SerialNoVerify from '../components/SerialNoVerify';
 import SalesScreenTabs from '../navigations/SalesScreenTabs';
 
 const SalesScreen = () => {
   const [activeTab, setActiveTab] = useState('Create');
+  const [data, setData] = useState([]);
+  const [isPreview, setIsPreview] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const renderContent = () => {
     if (activeTab === 'Create') {
-      return <Text style={styles.contentText}>Create Content</Text>;
+      if (isLoading) {
+        return <Loader />;
+      }
+      if (isPreview) {
+        return (
+          <SalesCreate
+            setIsPreview={setIsPreview}
+            setIsLoading={setIsLoading}
+            data={data}
+          />
+        );
+      } else {
+        return (
+          <SerialNoVerify
+            setIsPreview={setIsPreview}
+            setIsLoading={setIsLoading}
+            setData={setData}
+          />
+        );
+      }
     } else if (activeTab === 'History') {
       return <SalesHistory />;
     }

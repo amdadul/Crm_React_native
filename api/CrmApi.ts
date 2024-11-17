@@ -102,7 +102,7 @@ export const getStockListApi = async (page, per_page = 20) => {
       return {success: false, error: data?.message};
     }
   } catch (error) {
-    console.error('Total Stock:', error);
+    console.error(error);
     return {success: false, error: error};
   }
 };
@@ -127,7 +127,7 @@ export const getStockUpdateListApi = async (page, per_page = 10) => {
       return {success: false, error: data?.message};
     }
   } catch (error) {
-    console.error('Total Stock:', error);
+    console.error(error);
     return {success: false, error: error};
   }
 };
@@ -152,7 +152,7 @@ export const getSalesListApi = async (page, per_page = 10) => {
       return {success: false, error: data?.message};
     }
   } catch (error) {
-    console.error('Total Stock:', error);
+    console.error(error);
     return {success: false, error: error};
   }
 };
@@ -169,13 +169,59 @@ export const stockUpdateCreateApi = async formData => {
     }
 
     const data = await response.json();
-    if (data?.data.length > 0) {
+    if (data?.length > 0) {
       return {success: true, data};
     } else {
       return {success: false, error: data?.message};
     }
   } catch (error) {
-    console.error('Total Stock:', error);
+    console.error(error);
+    return {success: false, error: error};
+  }
+};
+
+export const serialNoVerifyApi = async formData => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/sales/serial_no_verify`, {
+      method: 'POST',
+      headers: await getHeaders(),
+      body: JSON.stringify(formData),
+    });
+    if (!response.ok) {
+      throw new Error(`Error with status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data?.data?.length > 0) {
+      return {success: true, data: data?.data};
+    } else {
+      return {success: false, error: data?.message};
+    }
+  } catch (error) {
+    console.error(error);
+    return {success: false, error: error};
+  }
+};
+
+export const salesCreateApi = async formData => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/sales/create`, {
+      method: 'POST',
+      headers: await getHeaders(),
+      body: JSON.stringify(formData),
+    });
+    if (!response.ok) {
+      throw new Error(`Error with status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data?.length > 0) {
+      return {success: true, data};
+    } else {
+      return {success: false, error: data?.message};
+    }
+  } catch (error) {
+    console.error(error);
     return {success: false, error: error};
   }
 };
