@@ -324,6 +324,10 @@ export const logoutApi = async () => {
   if (!response.ok) {
     throw new Error(`Login failed with status: ${response.status}`);
   }
-  await AsyncStorage.clear();
+  await AsyncStorage.removeItem('userToken');
+  await AsyncStorage.removeItem('userName');
+  await AsyncStorage.removeItem('userPhone');
+  await AsyncStorage.removeItem('userType');
+  await AsyncStorage.removeItem('tokenExpiration');
   return true;
 };

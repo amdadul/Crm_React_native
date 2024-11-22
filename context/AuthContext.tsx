@@ -61,8 +61,8 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
   };
 
   useEffect(() => {
-    checkToken();
     checkManagement();
+    checkToken();
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -87,6 +87,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
           'tokenExpiration',
           expirationDate.toISOString(),
         );
+        await checkManagement();
         setIsAuthenticated(true);
       } else {
         Toast.show({

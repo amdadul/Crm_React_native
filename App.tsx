@@ -38,7 +38,7 @@ function AppStack() {
             iconName = 'cart-outline';
           } else if (route.name === 'Stock') {
             iconName = 'layers-outline';
-          } else if (route.name === 'Stock Update') {
+          } else if (route.name === 'StockUpdate') {
             iconName = 'pencil-outline';
           }
 
