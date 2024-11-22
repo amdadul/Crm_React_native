@@ -26,16 +26,23 @@ const SalesHistory = () => {
     setLoading(true);
     try {
       const response = await getSalesListApi(page);
-      if (isRefreshing) {
-        setData(response.data.data); // Overwrite data on refresh
-      } else {
-        setData(
-          page === 1 ? response.data.data : [...data, ...response.data.data],
-        ); // Append data
-      }
+      if (response.success) {
+        if (isRefreshing) {
+          setData(response.data.data); // Overwrite data on refresh
+        } else {
+          setData(
+            page === 1 ? response.data.data : [...data, ...response.data.data],
+          ); // Append data
+        }
 
-      setCurrentPage(response?.data?.meta?.current_page);
-      setLastPage(response?.data?.meta?.last_page);
+        setCurrentPage(response?.data?.meta?.current_page);
+        setLastPage(response?.data?.meta?.last_page);
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: response.error,
+        });
+      }
     } catch (error) {
       Toast.show({
         type: 'error',

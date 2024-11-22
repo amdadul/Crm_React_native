@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -9,6 +10,7 @@ const FloatingUserIcon = () => {
   const {logout} = useAuth();
 
   const [userName, setUserName] = useState<string | null>(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -36,6 +38,9 @@ const FloatingUserIcon = () => {
     if (item === 'logout') {
       handleLogout();
     }
+    if (item === 'changePassword') {
+      navigation.navigate('ChangePassword');
+    }
     setIsVisible(false);
   };
 
@@ -56,9 +61,9 @@ const FloatingUserIcon = () => {
               <Text style={styles.menuText}>{userName}</Text>
             </View>
             <TouchableOpacity
-              onPress={() => handleMenuItemPress('profile')}
+              onPress={() => handleMenuItemPress('changePassword')}
               style={styles.menuItem}>
-              <Text style={styles.menuText}>Profile</Text>
+              <Text style={styles.menuText}>Change Password</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => handleMenuItemPress('logout')}

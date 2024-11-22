@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {
@@ -18,6 +19,11 @@ const LoginScreen: React.FC = () => {
     formState: {errors},
   } = useForm();
   const [isLoading, setIsLoading] = useState(false);
+  const navigation = useNavigation();
+
+  const goToForgotPassword = () => {
+    navigation.navigate('ForgotPassword');
+  };
 
   const onSubmit = async (data: any) => {
     setIsLoading(true);
@@ -45,21 +51,16 @@ const LoginScreen: React.FC = () => {
         control={control}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
-            placeholder="Phone number"
+            placeholder="Enter Phone/Email"
             value={value}
             onChangeText={onChange}
             onBlur={onBlur}
             style={[styles.input, errors.email && {borderColor: 'red'}]}
-            keyboardType="phone-pad"
           />
         )}
         name="email"
         rules={{
-          required: 'Phone number is required',
-          pattern: {
-            value: /^[0-9]{11}$/, // Adjust regex for your phone number format
-            message: 'Please enter a valid phone number',
-          },
+          required: 'Phone/Email is required',
         }}
         defaultValue=""
       />
@@ -105,7 +106,9 @@ const LoginScreen: React.FC = () => {
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>
-          Don't have an account? <Text style={styles.link}>Sign Up</Text>
+          <TouchableOpacity onPress={goToForgotPassword}>
+            <Text style={styles.link}>Forget password?</Text>
+          </TouchableOpacity>
         </Text>
       </View>
     </View>

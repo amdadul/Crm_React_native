@@ -13,12 +13,18 @@ const StockScreen = () => {
     setLoading(true);
     try {
       const response = await getStockListApi(page);
-
-      setData(
-        page === 1 ? response?.data?.data : [...data, ...response.data?.data],
-      );
-      setCurrentPage(response?.data?.meta?.current_page);
-      setLastPage(response?.data?.meta?.last_page);
+      if (response.success) {
+        setData(
+          page === 1 ? response?.data?.data : [...data, ...response.data?.data],
+        );
+        setCurrentPage(response?.data?.meta?.current_page);
+        setLastPage(response?.data?.meta?.last_page);
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: response.error,
+        });
+      }
     } catch (error) {
       Toast.show({
         type: 'error',

@@ -121,10 +121,11 @@ export const getStockUpdateListApi = async (page, per_page = 10) => {
     }
 
     const data = await response.json();
+
     if (data?.data.length > 0) {
       return {success: true, data};
     } else {
-      return {success: false, error: data?.message};
+      return {success: false, error: 'Data not found!'};
     }
   } catch (error) {
     console.error(error);
@@ -226,6 +227,94 @@ export const salesCreateApi = async formData => {
   }
 };
 
+export const changePasswordVerifyApi = async formData => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/change-password-verify`, {
+      method: 'POST',
+      headers: await getHeaders(),
+      body: JSON.stringify(formData),
+    });
+    if (!response.ok) {
+      throw new Error(`Error with status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data?.success) {
+      return {success: true, data};
+    } else {
+      return {success: false, error: data?.message};
+    }
+  } catch (error) {
+    console.error(error);
+    return {success: false, error: error};
+  }
+};
+
+export const changePasswordApi = async formData => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/change-password`, {
+      method: 'POST',
+      headers: await getHeaders(),
+      body: JSON.stringify(formData),
+    });
+    if (!response.ok) {
+      throw new Error(`Error with status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data?.success) {
+      return {success: true, data};
+    } else {
+      return {success: false, error: data?.message};
+    }
+  } catch (error) {
+    console.error(error);
+    return {success: false, error: error};
+  }
+};
+
+export const getDropdownData = async () => {
+  const response = await fetch(`${API_BASE_URL}/get-store-list`, {
+    method: 'GET',
+    headers: await getHeaders(),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error with status: ${response.status}`);
+  }
+  const data = await response.json();
+  if (data?.data.length > 0) {
+    return {success: true, data: data?.data};
+  } else {
+    return {success: false, error: data?.message};
+  }
+};
+
+export const getSalesReport = async (start_date, end_date, store_id) => {
+  const response = await fetch(`${API_BASE_URL}/sales/export-sales-report`, {
+    method: 'POST',
+    headers: await getHeaders(),
+    body: JSON.stringify({start_date, end_date, store_id}),
+  });
+  if (!response.ok) {
+    throw new Error(`Error with status: ${response.status}`);
+  }
+  return await response;
+};
+
+export const getStockReport = async store_id => {
+  const response = await fetch(`${API_BASE_URL}/stock/export-stock-report`, {
+    method: 'POST',
+    headers: await getHeaders(),
+    body: JSON.stringify({store_id}),
+  });
+  if (!response.ok) {
+    throw new Error(`Error with status: ${response.status}`);
+  }
+  return await response;
+};
+
 // Function to handle logout and remove the token
 export const logoutApi = async () => {
   const response = await fetch(`${API_BASE_URL}/logout`, {
@@ -235,8 +324,6 @@ export const logoutApi = async () => {
   if (!response.ok) {
     throw new Error(`Login failed with status: ${response.status}`);
   }
-  await AsyncStorage.removeItem('userToken');
-  await AsyncStorage.removeItem('userName');
-  await AsyncStorage.removeItem('tokenExpiration');
+  await AsyncStorage.clear();
   return true;
 };
